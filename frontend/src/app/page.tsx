@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Sidebar from "../components/Sidebar";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      hello world
+    <main className="pr-8 h-screen w-screen flex gap-4 bg-neutral-100">
+      <Sidebar />
+      <section className=" ">Heloo</section>
     </main>
   );
 }
