@@ -8,9 +8,15 @@ import userRouter from "./routes/user.route";
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
+const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
 const app = express();
+const allowedOrigins: string[] = [frontendURL];
 
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigins,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

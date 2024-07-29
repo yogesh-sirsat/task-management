@@ -6,10 +6,15 @@ import {
   Settings,
   UsersRound,
 } from "lucide-react";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { RootState } from "@/store/store";
+import { setSelectedNavMenu } from "@/store/features/appSlice";
 
 export default function NavMenu() {
-  const [selected, setSelected] = useState("Home");
+  const dispatch = useAppDispatch();
+  const selectedNavMenu = useAppSelector(
+    (state: RootState) => state.app.selectedNavMenu
+  );
   const menuItems = [
     {
       icon: <House />,
@@ -39,11 +44,11 @@ export default function NavMenu() {
         <button
           key={index}
           className={`flex items-center pl-2 py-1 gap-2 text-lg text-neutral-500 w-full ${
-            selected === item.text
+            selectedNavMenu === item.text
               ? "rounded border border-solid bg-zinc-100 border-zinc-300"
               : "hover:bg-zinc-100"
           }`}
-          onClick={() => setSelected(item.text)}
+          onClick={() => dispatch(setSelectedNavMenu(item.text))}
         >
           {item.icon}
           <div>{item.text}</div>
