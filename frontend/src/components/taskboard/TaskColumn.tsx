@@ -1,9 +1,10 @@
-import { ArrowUpNarrowWide, Plus } from "lucide-react";
+import { ArrowUpNarrowWide } from "lucide-react";
 import TaskCard from "./TaskCard";
-import { Task } from "@/interfaces/task.interface";
+import { Task, TaskStatus } from "@/interfaces/task.interface";
+import CreateStatusTaskButton from "../ui/CreateStatusTaskButton";
 
 interface TaskColumnProps {
-  status: string;
+  status: TaskStatus;
   tasks: Task[];
 }
 
@@ -21,10 +22,7 @@ export default function TaskColumn({ status, tasks }: TaskColumnProps) {
           </li>
         ))}
       </ul>
-      <button className="w-full p-2 rounded-md bg-gradient-to-b from-[#3A3A3A] to-[#202020] flex justify-between items-center ">
-        <h3 className="text-[#E3E1E1] text-base">Add new</h3>
-        <Plus strokeWidth={1.5} size={24} color="#E3E1E1" />
-      </button>
+      <CreateStatusTaskButton taskStatus={status} />
     </div>
   );
 }

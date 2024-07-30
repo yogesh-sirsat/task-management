@@ -5,8 +5,11 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { setTasks } from "@/store/features/taskSlice";
 import { useEffect, useState } from "react";
+import { TaskStatus } from "@/interfaces/task.interface";
 
-const columns = [
+const columns: {
+  status: TaskStatus;
+}[] = [
   { status: "To-Do" },
   { status: "In Progress" },
   { status: "Under Review" },

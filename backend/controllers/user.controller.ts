@@ -11,13 +11,17 @@ export async function createUser(
   next: NextFunction
 ) {
   try {
-    const userBody: User = req.body;
+    const userBody: Omit<User, "_id"> = req.body;
     const userExists = await getUserData(userBody.email);
     if (userExists) {
       throw new HttpError(409, "User already exists");
     }
     userBody.password = await bcrypt.hash(userBody.password, 10);
     const user = await createUserData(userBody);
+    req.session.user = {
+      _id: user?._id,
+      fullName: user?.fullName,
+    };
     res.status(201).json(sanitizeUser(user));
   } catch (err) {
     next(err);
@@ -40,7 +44,29 @@ export async function loginUser(
       throw new HttpError(401, "Invalid password");
     }
     const user = await getUserData(req.body.email);
+    req.session.user = {
+      _id: user?._id,
+      fullName: user?.fullName,
+    };
     res.status(200).json(sanitizeUser(user));
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function logoutUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        throw err;
+      }
+    });
+    res.clearCookie(process.env.SESSION_NAME || "TaskManagement");
+    res.sendStatus(200);
   } catch (err) {
     next(err);
   }

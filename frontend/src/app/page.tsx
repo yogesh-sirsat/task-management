@@ -1,10 +1,11 @@
-import Image from "next/image";
+import withSessionCheck from "./withSessionCheck";
 import Sidebar from "../components/sidebar/Sidebar";
 import { HelpCircle } from "lucide-react";
 import FeatureAds from "@/components/FeatureAds";
 import TaskBoard from "@/components/taskboard/TaskBoard";
+import TaskModal from "@/components/taskboard/TaskModal";
 
-export default function Home() {
+function Home() {
   return (
     <main className="pr-8 h-screen w-screen flex gap-4 bg-[#F7F7F7]">
       <Sidebar />
@@ -21,6 +22,9 @@ export default function Home() {
         <FeatureAds />
         <TaskBoard />
       </section>
+      <TaskModal />
     </main>
   );
 }
+
+export default withSessionCheck(Home);

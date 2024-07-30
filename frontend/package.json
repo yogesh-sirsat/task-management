@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.2.7",
     "dayjs": "^1.11.12",
     "lucide-react": "^0.417.0",
