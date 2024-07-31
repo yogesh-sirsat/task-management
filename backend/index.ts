@@ -26,6 +26,7 @@ const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
 const app = express();
 const allowedOrigins: string[] = [frontendURL];
 
+app.set("trust proxy", 1);
 app.use(
   cors({
     origin: allowedOrigins,
