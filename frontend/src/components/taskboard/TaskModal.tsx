@@ -171,7 +171,7 @@ export default function TaskModal() {
                   <h3>Status</h3>
                 </div>
                 <select
-                  value={taskModalData?.status}
+                  value={taskModalData?.status || ""}
                   required
                   className="focus:outline-none text-black w-36"
                   onChange={(e) => {
@@ -198,7 +198,7 @@ export default function TaskModal() {
                   <h3>Priority</h3>
                 </div>
                 <select
-                  value={taskModalData?.priority}
+                  value={taskModalData?.priority || ""}
                   className="focus:outline-none text-black w-36"
                   onChange={(e) => {
                     dispatch(
@@ -209,7 +209,9 @@ export default function TaskModal() {
                     );
                   }}
                 >
-                  <option value="">Not selected</option>
+                  <option value="" disabled>
+                    Not selected
+                  </option>
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="Urgent">Urgent</option>
