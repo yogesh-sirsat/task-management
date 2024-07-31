@@ -1,6 +1,12 @@
+"use client";
 import { BellDot, ChevronsRight, Loader } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { RootState } from "@/store/store";
+import { logout } from "@/store/features/userSlice";
 
 export default function UserProfile() {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user.user);
   return (
     <>
       <div className="flex gap-2 text-xl font-medium text-zinc-950">
@@ -10,7 +16,7 @@ export default function UserProfile() {
           className="shrink-0 rounded-lg aspect-square w-[2rem]"
           alt="User avatar"
         />
-        <div className="my-auto">Joe Gardner</div>
+        <div className="my-auto">{user?.fullName}</div>
       </div>
       <div className="flex gap-0.5 justify-between mt-2 w-full">
         <div className="flex gap-5 my-auto text-neutral-500">
@@ -21,7 +27,10 @@ export default function UserProfile() {
           </div>
           <ChevronsRight />
         </div>
-        <button className="p-2 text-base rounded hover:bg-zinc-200 bg-zinc-100 text-neutral-500">
+        <button
+          className="p-2 text-base rounded hover:bg-zinc-200 bg-zinc-100 text-neutral-500"
+          onClick={() => dispatch(logout())}
+        >
           Logout
         </button>
       </div>

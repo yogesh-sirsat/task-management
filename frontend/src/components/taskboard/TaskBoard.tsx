@@ -25,7 +25,10 @@ export default function TaskBoard() {
   const fetchTasks = async () => {
     setError(null);
     try {
-      const response = await fetch(`${backendURL}/tasks`);
+      const response = await fetch(`${backendURL}/tasks`, {
+        method: "GET",
+        credentials: "include",
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch tasks");
       }
@@ -39,7 +42,6 @@ export default function TaskBoard() {
 
   useEffect(() => {
     fetchTasks();
-    dispatch(setTasks(tasks));
   }, [dispatch]);
 
   return (

@@ -5,7 +5,7 @@ import DownloadAppButton from "./DownloadAppButton";
 
 export default function Sidebar() {
   return (
-    <aside className="flex flex-col min-w-[20vw] 2xl:min-w-[15vw]">
+    <aside className="flex flex-col min-w-[20vw] 2xl:min-w-[18vw] max-h-screen">
       <div className="flex flex-col grow px-4 pt-4 2xl:pt-6 w-full bg-white border-r border-neutral-200 relative">
         <UserProfile />
         <NavMenu />

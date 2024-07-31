@@ -6,7 +6,7 @@ export const authenticate = (
   next: NextFunction
 ) => {
   try {
-    if (req.session.user) {
+    if (req.session.user?._id) {
       next();
     } else {
       res.status(401).json({ message: "Not authenticated" });

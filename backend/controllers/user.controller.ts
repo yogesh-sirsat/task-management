@@ -18,10 +18,7 @@ export async function createUser(
     }
     userBody.password = await bcrypt.hash(userBody.password, 10);
     const user = await createUserData(userBody);
-    req.session.user = {
-      _id: user?._id,
-      fullName: user?.fullName,
-    };
+    req.session.user = sanitizeUser(user);
     res.status(201).json(sanitizeUser(user));
   } catch (err) {
     next(err);
@@ -44,10 +41,7 @@ export async function loginUser(
       throw new HttpError(401, "Invalid password");
     }
     const user = await getUserData(req.body.email);
-    req.session.user = {
-      _id: user?._id,
-      fullName: user?.fullName,
-    };
+    req.session.user = sanitizeUser(user);
     res.status(200).json(sanitizeUser(user));
   } catch (err) {
     next(err);

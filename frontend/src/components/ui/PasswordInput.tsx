@@ -8,7 +8,7 @@ export default function PasswordInput() {
   return (
     <div className="relative flex">
       <Input
-        name="Password"
+        name="password"
         placeholder="Password"
         type={isPasswordVisible ? "text" : "password"}
       />

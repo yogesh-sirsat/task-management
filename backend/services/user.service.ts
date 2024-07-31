@@ -18,11 +18,8 @@ export async function createUserData(
   return createdUser;
 }
 
-export async function getUserData(email: string): Promise<User | void> {
+export async function getUserData(email: string): Promise<User | null> {
   const { db } = await connectToMongoDB();
   const user = await db.collection<User>("users").findOne({ email });
-  if (!user) {
-    throw new Error("User data not found");
-  }
   return user;
 }

@@ -1,9 +1,14 @@
 "use client";
 import Input from "@/components/ui/Input";
 import PasswordInput from "@/components/ui/PasswordInput";
+import { useAppDispatch } from "@/store/hooks";
+import { login } from "@/store/features/userSlice";
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [error, setError] = useState<string | null>(null);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -11,8 +16,10 @@ export default function SignUp() {
     setError(null);
     try {
       const form = e.target as HTMLFormElement;
+      console.log(form);
       const response = await fetch(`${backendURL}/signup`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -22,12 +29,14 @@ export default function SignUp() {
           password: form.password.value,
         }),
       });
-      if (!response.ok) {
-        throw new Error("Response not ok");
-      }
       const data = await response.json();
-    } catch (e) {
-      setError("Oops! Error while signing up!");
+      if (!response.ok) {
+        throw new Error(data?.message || "Oops! Error while signing up!");
+      }
+      dispatch(login(data));
+      router.push("/");
+    } catch (e: any) {
+      setError(e.message);
       console.error(e);
     }
   };
@@ -53,7 +62,7 @@ export default function SignUp() {
         </form>
         <div className="flex text-zinc-600 gap-1 text-center self-center">
           <p className="">Already have an account?</p>
-          <a href="#" className="text-[#0054A1]">
+          <a href="/login" className="text-[#0054A1]">
             Log in
             <span>.</span>
           </a>

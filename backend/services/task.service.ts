@@ -3,15 +3,24 @@ import { Task } from "../models/task.model";
 import { ObjectId } from "mongodb";
 import HttpError from "../utils/httpError";
 
-export async function getAllTasksData(): Promise<Task[]> {
+export async function getAllTasksData(
+  userId: ObjectId | string
+): Promise<Task[]> {
   const { db } = await connectToMongoDB();
-  const tasks = await db.collection<Task>("tasks").find({}).toArray();
+  const tasks = await db
+    .collection<Task>("tasks")
+    .find({ user: userId })
+    .toArray();
   return tasks;
 }
 
-export async function createTaskData(task: Task): Promise<Task | null> {
+export async function createTaskData(
+  task: Omit<Task, "_id">
+): Promise<Task | null> {
   const { db } = await connectToMongoDB();
-  const result = await db.collection<Task>("tasks").insertOne(task);
+  const result = await db
+    .collection<Omit<Task, "_id">>("tasks")
+    .insertOne(task);
   const createdTask = await db.collection<Task>("tasks").findOne({
     _id: result.insertedId,
   });

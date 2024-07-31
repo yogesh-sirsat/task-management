@@ -15,6 +15,7 @@ declare module "express-session" {
     user: {
       _id: ObjectId | string | undefined;
       fullName: string | undefined;
+      email: string | undefined;
     };
   }
 }
@@ -26,6 +27,7 @@ const allowedOrigins: string[] = [frontendURL];
 app.use(
   cors({
     origin: allowedOrigins,
+    credentials: true,
   })
 );
 app.use(express.urlencoded({ extended: true }));
@@ -33,14 +35,15 @@ app.use(express.json());
 
 app.use(
   session({
-    name: process.env.SESSION_NAME || "TaskManagement",
+    // name: process.env.SESSION_NAME || "TaskManagement",
     secret: process.env.SESSION_SECRET || "mRhgxyIjfbbSY8MazNMDYOHK1aPZkyCp",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      sameSite: true,
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 96 * 60 * 60 * 1000,
+      httpOnly: true,
     },
   })
 );

@@ -7,6 +7,7 @@ import {
   updateTaskData,
   deleteTaskData,
 } from "../services/task.service";
+import HttpError from "../utils/httpError";
 
 export async function getAllTasks(
   req: Request,
@@ -14,7 +15,11 @@ export async function getAllTasks(
   next: NextFunction
 ): Promise<Task[] | void> {
   try {
-    const tasks = await getAllTasksData();
+    const userId = req.session.user?._id;
+    if (!userId) {
+      throw new HttpError(401, "User not authenticated");
+    }
+    const tasks = await getAllTasksData(userId);
     res.status(200).json(tasks);
   } catch (err) {
     next(err);
@@ -27,7 +32,15 @@ export async function createTask(
   next: NextFunction
 ): Promise<Task | void> {
   try {
-    const task = await createTaskData(req.body);
+    const userId = req.session.user?._id;
+    if (!userId) {
+      throw new HttpError(401, "User not authenticated");
+    }
+    const newTask: Omit<Task, "_id"> = {
+      ...req.body,
+      user: userId,
+    };
+    const task = await createTaskData(newTask);
     res.status(201).json(task);
   } catch (err) {
     next(err);

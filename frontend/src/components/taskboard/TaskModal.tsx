@@ -15,7 +15,11 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { setIsTaskModalOpen } from "@/store/features/appSlice";
-import { setTaskModalData } from "@/store/features/taskSlice";
+import {
+  addTask,
+  updateTask,
+  setTaskModalData,
+} from "@/store/features/taskSlice";
 import { useEffect, useRef, FormEvent, useState } from "react";
 
 const modalButtons = [
@@ -35,9 +39,9 @@ export default function TaskModal() {
   const isTaskModalOpen = useAppSelector(
     (state: RootState) => state.app.isTaskModalOpen
   );
-  const { taskModalData } = useAppSelector((state: RootState) => ({
-    taskModalData: state.task.taskModalData,
-  }));
+  const taskModalData = useAppSelector(
+    (state: RootState) => state.task.taskModalData
+  );
   const dispatch = useAppDispatch();
 
   const [error, setError] = useState<string | null>(null);
@@ -62,6 +66,7 @@ export default function TaskModal() {
   function close() {
     dispatch(setIsTaskModalOpen(false));
     dispatch(setTaskModalData(null));
+    setError(null);
   }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -71,20 +76,26 @@ export default function TaskModal() {
       const url = taskModalData?._id
         ? `${backendURL}/tasks/${taskModalData?._id}`
         : `${backendURL}/tasks`;
+      const { _id, ...data }: any = taskModalData;
       const response = await fetch(url, {
         method: taskModalData?._id ? "PUT" : "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          taskModalData,
+          ...data,
         }),
       });
       if (!response.ok) {
         throw new Error("Failed to save task");
       }
-      const data = await response.json();
-
+      if (taskModalData?._id) {
+        dispatch(updateTask(taskModalData));
+      } else {
+        const data = await response.json();
+        dispatch(addTask(data));
+      }
       close();
     } catch (error) {
       console.error("Error:", error);
@@ -175,7 +186,7 @@ export default function TaskModal() {
                   <option value="" disabled>
                     Not selected
                   </option>
-                  <option value="To-do">To-do</option>
+                  <option value="To-do">To-Do</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Under Review">Under Review</option>
                   <option value="Completed">Completed</option>
@@ -211,9 +222,10 @@ export default function TaskModal() {
                 </div>
                 <input
                   type="date"
-                  value={taskModalData?.deadline?.split("T")[0]}
+                  value={taskModalData?.deadline?.split("T")[0] || ""}
                   className="focus:outline-none text-black"
                   onChange={(e) => {
+                    console.log(e.target.value);
                     dispatch(
                       setTaskModalData({
                         ...taskModalData,
@@ -231,7 +243,7 @@ export default function TaskModal() {
                 <textarea
                   ref={descriptionRef}
                   rows={1}
-                  value={taskModalData?.description || ""}
+                  value={taskModalData?.description}
                   className="focus:outline-none resize-none flex grow text-black"
                   placeholder="Not selected"
                   onChange={(e) => {
