@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import dotenv from "dotenv";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { authenticate } from "./middlewares/auth.middleware";
@@ -36,16 +37,19 @@ app.use(express.json());
 
 app.use(
   session({
-    // name: process.env.SESSION_NAME || "TaskManagement",
+    name: process.env.SESSION_NAME || "TaskManagement",
     secret: process.env.SESSION_SECRET || "mRhgxyIjfbbSY8MazNMDYOHK1aPZkyCp",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 96 * 60 * 60 * 1000,
       httpOnly: true,
     },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      dbName: process.env.MONGODB_NAME,
+    }),
   })
 );
 
