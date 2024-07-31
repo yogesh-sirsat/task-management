@@ -4,7 +4,9 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts",
+    "build": "tsc --build",
+    "start": "node dist/index.js",
+    "start-dev": "ts-node index.ts",
     "dev": "nodemon index.ts"
   },
   "author": "Yogesh Sirsat",
