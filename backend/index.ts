@@ -19,7 +19,8 @@ declare module "express-session" {
     };
   }
 }
-const PORT = process.env.PORT || 4000;
+const PORT = Number(process.env.PORT || 4000);
+const HOST = process.env.HOST || "localhost";
 const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
 const app = express();
 const allowedOrigins: string[] = [frontendURL];
@@ -64,6 +65,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`Server is running on port ${PORT}`);
 });
